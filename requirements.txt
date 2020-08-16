@@ -1,0 +1,2 @@
+eyeD3==0.9.5
+ffmpeg-python==0.2.0

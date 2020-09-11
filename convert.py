@@ -8,6 +8,8 @@ fileFormat = 'aif'
 targetFormat = 'mp3'
 album = 'KMPLX036'
 isVa = True
+year = "2020"
+imageFile = "/Users/toban/Desktop/kmplx36-larger.jpg"
 
 def getFiles(mypath):
 	onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f)) and f.endswith("." + fileFormat)]
@@ -27,7 +29,7 @@ def convertFiles(files):
 def replaceAndTrim(input):
 	return input.replace('_', ' ').strip()
 
-def tagFiles(files):
+def tagFiles(files, image):
 	for f in files:
 		filename = basename(f).replace('.' + targetFormat, '')
 		name_title_parts = filename.split('-')
@@ -38,14 +40,22 @@ def tagFiles(files):
 		print(title)
 		audiofile = eyed3.load(f)
 		audiofile.tag.artist = name
+		audiofile.tag.year = year 
 		audiofile.tag.album = album
+		audiofile.tag.publisher = "KMPLX"
 		audiofile.tag.album_artist = "Various Artists"
 		audiofile.tag.title = title
 		audiofile.tag.track_num = number
+
+		if(image):
+			description = album
+			audiofile.tag.images.set(3, imagedata, "image/jpeg", description)
+
 		audiofile.tag.save()
 
 
 path = '/Users/toban/Desktop/KMPLX036/renderat'
 files = getFiles(path)
 files = convertFiles(files)
-tagFiles(files)
+imagedata = open(imageFile,"rb").read()
+tagFiles(files, imagedata)

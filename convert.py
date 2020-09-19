@@ -16,12 +16,22 @@ def getFiles(mypath):
 	onlyfiles =  list(map(lambda x: mypath + '/' + x, onlyfiles))
 	return onlyfiles
 
-def convertFiles(files):
+def convertFilesTo24Bit(files):
 	converted = []
 	for f in files:
 		pre, ext = splitext(f)
 		stream = ffmpeg.input(f)
-		stream = ffmpeg.output(stream, pre + '.mp3', audio_bitrate='320k')
+		stream = ffmpeg.output(stream, pre + '.wav', bitrate='24')
+		stream.run()
+		converted.append(pre + '.wav')
+	return converted
+
+def convertFilesToMp3(files):
+	converted = []
+	for f in files:
+		pre, ext = splitext(f)
+		stream = ffmpeg.input(f)
+		stream = ffmpeg.output(stream, pre + '.mp3', audio_bitrate='128')
 		stream.run()
 		converted.append(pre + '.mp3')
 	return converted
@@ -56,6 +66,7 @@ def tagFiles(files, image):
 
 path = '/Users/toban/Desktop/KMPLX036/renderat'
 files = getFiles(path)
-files = convertFiles(files)
-imagedata = open(imageFile,"rb").read()
-tagFiles(files, imagedata)
+files = convertFilesTo24Bit(files)
+#files = convertFilesToMp3(files)
+#imagedata = open(imageFile,"rb").read()
+#tagFiles(files, None)
